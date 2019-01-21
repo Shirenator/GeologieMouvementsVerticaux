@@ -1,4 +1,3 @@
-from tabulate import tabulate
 import pandas as pd
 
 class GSL:
@@ -41,28 +40,8 @@ class Location:
     def __str__(self):
         return ("Location: "+self.name+", "+str(self.latitude)+", "+str(self.longitude)+", "+str(self.age_min)+", "+str(self.age_max)+", "+str(self.min_bathy)+", "+str(self.max_bathy)+", "+str(self.altitude))
 
-
-
-class Vertical_movement(Location):
-    #Constructor for a point at line i in the matrix
-    def __init__(self,matrix,i,gsls):
-        super().__init__(self,matrix,i)
-        self.gsls = gsls
-
-    #Constructor with a location entered
-    def __init__(self,loc,gsls):
-        self.name = loc.name
-        self.latitude = loc.latitude
-        self.longitude = loc.longitude
-        self.age_min = loc.age_min
-        self.age_max = loc.age_max
-        self.min_bathy = loc.min_bathy
-        self.max_bathy = loc.max_bathy
-        self.altitude = loc.altitude
-        self.gsls = gsls
-
     #returns a tab containing all values of vertical movement for this point
-    def calc(self):
+    def vertical_movement(self,gsls):
         ret = []
         ret.append(self)
         for gsl in gsls:
@@ -104,10 +83,8 @@ class Vertical_movement(Location):
                 vm.append(mean_fvm)
                 vm.append(max_fvm)
             ret.append(vm)
-        return ret 
+        return ret
         #tab contains: Location object as first element and tabs containing [method, method_name, min vm value, mean vm value, max vm value
-
-
 
 def read_gsl(file,sheet_name):
     xl = pd.read_excel(file,sheet_name=sheet_name,header=None)
@@ -133,17 +110,19 @@ def read_locations(file,sheet_name):
     return locations
 
 
-'''
-fileGSL = "SL_CHARTS_2012.xlsx"
-fileLOC = "S1.xlsx"
+
+fileGSL = "excel_files/SL_CHARTS_2012.xlsx"
+fileLOC = "excel_files/S1.xlsx"
 
 gsls = read_gsl(fileGSL,0)
 locations = read_locations(fileLOC,'PIACENZIAN_FVM')
 for loc in locations:
     print(str(loc))
 
-point1 = Vertical_movement(locations[0],gsls)
+point1 = locations[0]
 
-fvm = point1.calc() 
-print(fvm)
-'''
+fvms = point1.vertical_movement(gsls) #method, method_name, min, mean, max
+
+for fvm in fvms:
+    print("--------------------------")
+    print(fvm)
