@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class GSL:
     def __init__(self, matrix, j):
         self.method = matrix[0,j]
@@ -27,15 +28,17 @@ class Location:
         self.max_bathy = max_bathy
         self.altitude = altitude
     #Constructor for a point at line i in the matrix
-    def __init__(self, matrix, i):
-        self.name = matrix[i,2]
-        self.latitude = matrix[i,3]
-        self.longitude = matrix[i,4]
-        self.age_min = matrix[i,7]
-        self.age_max = matrix[i,8]
-        self.min_bathy = matrix[i,10]
-        self.max_bathy = matrix[i,11]
-        self.altitude = matrix[i,12]
+    @classmethod
+    def from_file(cls, matrix, i):
+        name = matrix[i,2]
+        latitude = matrix[i,3]
+        longitude = matrix[i,4]
+        age_min = matrix[i,7]
+        age_max = matrix[i,8]
+        min_bathy = matrix[i,10]
+        max_bathy = matrix[i,11]
+        altitude = matrix[i,12]
+        return cls(name,latitude,longitude,age_min,age_max,min_bathy,max_bathy,altitude)
 
     def __str__(self):
         return ("Location: "+self.name+", "+str(self.latitude)+", "+str(self.longitude)+", "+str(self.age_min)+", "+str(self.age_max)+", "+str(self.min_bathy)+", "+str(self.max_bathy)+", "+str(self.altitude))
@@ -105,7 +108,7 @@ def read_locations(file,sheet_name):
     locations = []
     for i in range(4,matrix[:,1].size):
         if matrix[i,1]:
-            loc = Location(matrix,i)
+            loc = Location.from_file(matrix,i)
             locations.append(loc)
     return locations
 
