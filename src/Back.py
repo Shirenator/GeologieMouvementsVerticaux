@@ -18,75 +18,74 @@ class GSL:
 
 class Location:
     #Constructor for a user-entered point
-    def __init__(self, name,latitude,longitude,age_min,age_max,min_bathy,max_bathy,altitude):
-        self.name = name
-        self.latitude = latitude
-        self.longitude = longitude
-        self.age_min = age_min
-        self.age_max = age_max
-        self.min_bathy = min_bathy
-        self.max_bathy = max_bathy
-        self.altitude = altitude
-    #Constructor for a point at line i in the matrix
-    @classmethod
-    def from_file(cls, matrix, i):
-        name = matrix[i,2]
-        latitude = matrix[i,3]
-        longitude = matrix[i,4]
-        age_min = matrix[i,7]
-        age_max = matrix[i,8]
-        min_bathy = matrix[i,10]
-        max_bathy = matrix[i,11]
-        altitude = matrix[i,12]
-        return cls(name,latitude,longitude,age_min,age_max,min_bathy,max_bathy,altitude)
+	def __init__(self, name,latitude,longitude,age_min,age_max,min_bathy,max_bathy,altitude):
+		self.name = name
+		self.latitude = latitude
+		self.longitude = longitude
+		self.age_min = age_min
+		self.age_max = age_max
+		self.min_bathy = min_bathy
+		self.max_bathy = max_bathy
+		self.altitude = altitude
 
-    def __str__(self):
-        return ("Location: "+self.name+", "+str(self.latitude)+", "+str(self.longitude)+", "+str(self.age_min)+", "+str(self.age_max)+", "+str(self.min_bathy)+", "+str(self.max_bathy)+", "+str(self.altitude))
+    #Constructor for a point at line i in the matrix
+	@classmethod
+	def from_file(cls, matrix, i):
+		name = matrix[i,2]
+		latitude = matrix[i,3]
+		longitude = matrix[i,4]
+		age_min = matrix[i,7]
+		age_max = matrix[i,8]
+		min_bathy = matrix[i,10]
+		max_bathy = matrix[i,11]
+		altitude = matrix[i,12]
+		return cls(name,latitude,longitude,age_min,age_max,min_bathy,max_bathy,altitude)
+
+	def __str__(self):
+		return ("Location: "+self.name+", "+str(self.latitude)+", "+str(self.longitude)+", "+str(self.age_min)+", "+str(self.age_max)+", "+str(self.min_bathy)+", "+str(self.max_bathy)+", "+str(self.altitude))
 
     #returns a tab containing all values of vertical movement for this point
-    def vertical_movement(self,gsls):
-        ret = []
-        ret.append(self)
-        for gsl in gsls:
-            vm = [] #method, method_name, min, mean, max
-            time = gsl.time.tolist()
-            sl_min = [x for x in gsl.sea_level_min.tolist() if x is not None]
-            sl_mean = [x for x in gsl.sea_level_mean.tolist() if x is not None]
-            sl_max = [x for x in gsl.sea_level_max.tolist() if x is not None]
-            time_filtered = []
-            sl_min_filtered = []
-            sl_mean_filtered = []
-            sl_max_filtered = []
-            bool = True
-            i = 0
+	def vertical_movement(self,gsls):
+		ret = []
+		ret.append(self)
+		for gsl in gsls:
+			vm = [] #method, method_name, min, mean, max
+			time = gsl.time.tolist()
+			sl_min = [x for x in gsl.sea_level_min.tolist() if x is not None]
+			sl_mean = [x for x in gsl.sea_level_mean.tolist() if x is not None]
+			sl_max = [x for x in gsl.sea_level_max.tolist() if x is not None]
+			time_filtered = []
+			sl_min_filtered = []
+			sl_mean_filtered = []
+			sl_max_filtered = []
+			bool = True
+			i = 0
 
-            while(bool):
-                if time[i] > self.age_min and time[i] < self.age_max:
-                    time_filtered.append(time[i])
-                    sl_min_filtered.append(sl_min[i])
-                    sl_mean_filtered.append(sl_mean[i])
-                    sl_max_filtered.append(sl_max[i])
-                i+=1
-                if(time[i]>self.age_max):
-                    bool = False
+			while(bool):
+				if time[i] > self.age_min and time[i] < self.age_max:
+					time_filtered.append(time[i])
+					sl_min_filtered.append(sl_min[i])
+					sl_mean_filtered.append(sl_mean[i])
+					sl_max_filtered.append(sl_max[i])
+				i+=1
+				if(time[i]>self.age_max):
+					bool = False
+			method = gsl.method
+			method_name = gsl.method_name
+			vm.append(method)
+			vm.append(method_name)
 
-            if len(sl_min_filtered) == 0 or len(sl_mean_filtered) == 0 or len(sl_max_filtered) == 0:
-                vm.append(method)
-                vm.append(method_name)
-                vm.append(None)
-            else:
-                min_fvm = self.altitude-max(sl_max_filtered)+self.min_bathy
-                mean_fvm = self.altitude-sum(sl_mean_filtered)/float(len(sl_mean_filtered))+((self.min_bathy)+(self.min_bathy))/2
-                max_fvm = self.altitude-min(sl_min_filtered)+self.max_bathy
-                method = gsl.method
-                method_name = gsl.method_name
-                vm.append(method)
-                vm.append(method_name)
-                vm.append(min_fvm)
-                vm.append(mean_fvm)
-                vm.append(max_fvm)
-            ret.append(vm)
-        return ret
+			if len(sl_min_filtered) == 0 or len(sl_mean_filtered) == 0 or len(sl_max_filtered) == 0:
+				vm.append(None)
+			else:
+				min_fvm = self.altitude-max(sl_max_filtered)+self.min_bathy
+				mean_fvm = self.altitude-sum(sl_mean_filtered)/float(len(sl_mean_filtered))+((self.min_bathy)+(self.min_bathy))/2
+				max_fvm = self.altitude-min(sl_min_filtered)+self.max_bathy
+				vm.append(min_fvm)
+				vm.append(mean_fvm)
+				vm.append(max_fvm)
+			ret.append(vm)
+		return ret
         #tab contains: Location object as first element and tabs containing [method, method_name, min vm value, mean vm value, max vm value
 
 def read_gsl(file,sheet_name):

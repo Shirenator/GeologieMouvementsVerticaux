@@ -37,14 +37,25 @@ class CreateLocationWindow(QDialog):
 		layout.addRow(QLabel("Altitude:"), self.alt)
 
 		self.formGroupBox.setLayout(layout)
-		buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-		buttonBox.accepted.connect(self.accept)
-		buttonBox.rejected.connect(self.reject)
+		self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+		self.buttonBox.accepted.connect(self.accept)
+		self.buttonBox.rejected.connect(self.reject)
 		mainLayout = QVBoxLayout()
 		mainLayout.addWidget(self.formGroupBox)
-		mainLayout.addWidget(buttonBox)
+		mainLayout.addWidget(self.buttonBox)
 		self.setLayout(mainLayout)
 		
+		#Connection check
+		self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+		self.name.textChanged.connect(self.checkEmpty)
+		self.lat.textChanged.connect(self.checkEmpty)
+		self.lon.textChanged.connect(self.checkEmpty)
+		self.mina.textChanged.connect(self.checkEmpty)
+		self.maxa.textChanged.connect(self.checkEmpty)
+		self.minb.textChanged.connect(self.checkEmpty)
+		self.maxb.textChanged.connect(self.checkEmpty)
+		self.alt.textChanged.connect(self.checkEmpty)
+
 
 	#Clear all LineEdits
 	def clearLineEdit(self):
@@ -56,6 +67,15 @@ class CreateLocationWindow(QDialog):
 		self.minb.clear()
 		self.maxb.clear()
 		self.alt.clear()
+
+	#Check if a lineEdit is empty
+	def checkEmpty(self):
+		if(self.name.text()=="" or self.lat.text()=="" or self.lon.text()=="" or self.mina.text()=="" or self.maxa.text()=="" or self.minb.text()=="" or self.maxb.text()=="" or self.alt.text()==""):
+			flag = False
+		else:
+			flag = True
+		self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(flag)
+			
 
 
 		

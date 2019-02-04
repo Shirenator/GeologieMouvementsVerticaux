@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'geomove.ui'
 #
-# Created: Mon Jan 21 17:30:15 2019
+# Created: Wed Jan 30 17:25:40 2019
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -52,13 +52,13 @@ class Ui_Geomove(object):
         self.characteristics.setObjectName("characteristics")
         self.Characteristics.addWidget(self.characteristics)
         self.MainWindowLayout.addLayout(self.Characteristics)
-        self.MainWindowLayout.setStretch(0, 2)
+        self.MainWindowLayout.setStretch(0, 1)
         self.MainWindowLayout.setStretch(1, 5)
         self.MainWindowLayout.setStretch(2, 1)
         self.horizontalLayout.addLayout(self.MainWindowLayout)
         Geomove.setCentralWidget(self.centralwidget)
         self.menuBar = QtGui.QMenuBar(Geomove)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 948, 22))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 948, 25))
         self.menuBar.setObjectName("menuBar")
         self.menu_File = QtGui.QMenu(self.menuBar)
         self.menu_File.setEnabled(True)
@@ -87,8 +87,8 @@ class Ui_Geomove(object):
         self.actionQuit.setObjectName("actionQuit")
         self.actionChange_language = QtGui.QAction(Geomove)
         self.actionChange_language.setObjectName("actionChange_language")
-        self.actionImport_points = QtGui.QAction(Geomove)
-        self.actionImport_points.setObjectName("actionImport_points")
+        self.actionImport_locations = QtGui.QAction(Geomove)
+        self.actionImport_locations.setObjectName("actionImport_locations")
         self.actionChange_scale = QtGui.QAction(Geomove)
         self.actionChange_scale.setObjectName("actionChange_scale")
         self.actionCa_marche_pas = QtGui.QAction(Geomove)
@@ -97,6 +97,8 @@ class Ui_Geomove(object):
         self.actionVoir_didacticiel.setObjectName("actionVoir_didacticiel")
         self.actionCr_dits = QtGui.QAction(Geomove)
         self.actionCr_dits.setObjectName("actionCr_dits")
+        self.actionImport_GSL = QtGui.QAction(Geomove)
+        self.actionImport_GSL.setObjectName("actionImport_GSL")
         self.menu_File.addAction(self.actionNew_Map)
         self.menu_File.addAction(self.action_Open_Map)
         self.menu_File.addAction(self.actionOpen_recent_Map)
@@ -105,7 +107,8 @@ class Ui_Geomove(object):
         self.menu_File.addAction(self.actionSave_as)
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionQuit)
-        self.menu_Edition.addAction(self.actionImport_points)
+        self.menu_Edition.addAction(self.actionImport_locations)
+        self.menu_Edition.addAction(self.actionImport_GSL)
         self.menu_Edition.addAction(self.actionChange_scale)
         self.menu_Settings.addAction(self.actionChange_language)
         self.menu_Help.addAction(self.actionVoir_didacticiel)
@@ -133,9 +136,10 @@ class Ui_Geomove(object):
         self.actionSave_as.setText(QtGui.QApplication.translate("Geomove", "Save as ...", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("Geomove", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionChange_language.setText(QtGui.QApplication.translate("Geomove", "Change language", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionImport_points.setText(QtGui.QApplication.translate("Geomove", "Import Location from Excel", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionImport_locations.setText(QtGui.QApplication.translate("Geomove", "Import Location from Excel", None, QtGui.QApplication.UnicodeUTF8))
         self.actionChange_scale.setText(QtGui.QApplication.translate("Geomove", "Change scale", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCa_marche_pas.setText(QtGui.QApplication.translate("Geomove", "Ca marche pas", None, QtGui.QApplication.UnicodeUTF8))
         self.actionVoir_didacticiel.setText(QtGui.QApplication.translate("Geomove", "Watch didacticiel", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCr_dits.setText(QtGui.QApplication.translate("Geomove", "Crédits", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionImport_GSL.setText(QtGui.QApplication.translate("Geomove", "Import Global Sea Level from Excel", None, QtGui.QApplication.UnicodeUTF8))
 

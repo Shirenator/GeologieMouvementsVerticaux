@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <layout class="QHBoxLayout" name="MainWindowLayout" stretch="2,5,1">
+     <layout class="QHBoxLayout" name="MainWindowLayout" stretch="1,5,1">
       <property name="spacing">
        <number>6</number>
       </property>
@@ -78,7 +78,7 @@
      <x>0</x>
      <y>0</y>
      <width>948</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -101,7 +101,8 @@
     <property name="title">
      <string>&amp;Edition</string>
     </property>
-    <addaction name="actionImport_points"/>
+    <addaction name="actionImport_locations"/>
+    <addaction name="actionImport_GSL"/>
     <addaction name="actionChange_scale"/>
    </widget>
    <widget class="QMenu" name="menu_Settings">
@@ -136,11 +137,6 @@
     <string>Open recent Map</string>
    </property>
   </action>
-  <action name="actionImport_Points">
-   <property name="text">
-    <string>Import Points</string>
-   </property>
-  </action>
   <action name="actionSave">
    <property name="text">
     <string>Save</string>
@@ -164,7 +160,7 @@
     <string>Change language</string>
    </property>
   </action>
-  <action name="actionImport_points">
+  <action name="actionImport_locations">
    <property name="text">
     <string>Import Location from Excel</string>
    </property>
@@ -174,19 +170,14 @@
     <string>Change scale</string>
    </property>
   </action>
-  <action name="actionCa_marche_pas">
-   <property name="text">
-    <string>Ca marche pas</string>
-   </property>
-  </action>
   <action name="actionVoir_didacticiel">
    <property name="text">
     <string>Watch didacticiel</string>
    </property>
   </action>
-  <action name="actionCr_dits">
+  <action name="actionImport_GSL">
    <property name="text">
-    <string>Crédits</string>
+    <string>Import Global Sea Level from Excel</string>
    </property>
   </action>
  </widget>
