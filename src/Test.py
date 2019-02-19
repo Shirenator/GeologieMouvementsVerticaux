@@ -2,6 +2,8 @@ import sys
 import Back
 import PrintLocationCharacteristics
 import CreateLocationWindow
+import re
+import os
 from PySide.QtGui import *
 from PySide.QtCore import *
 from geomove import Ui_Geomove
@@ -40,10 +42,36 @@ class MainWindow(QMainWindow, Ui_Geomove):
 
 	##########
 	#Add a map on the interface
-	def action_addMap(self):
+	def action_addMap(self):		
 		
-		item = QStandardItem("MapExample")
-		self.modelmaps.appendRow(item)
+
+		fname = QFileDialog.getOpenFileName(self, 'Open file','c:\\',"TIF Files (*.TIF)")
+		if fname[0]:
+
+			scene = QGraphicsScene()
+
+			mapsize = self.map.frameSize()
+			mWid = mapsize.width()
+			mHei = mapsize.height()
+			im0 = QImage(fname[0])
+
+			pixmap = QPixmap.fromImage(im0.scaled(mWid, mHei, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+			w_pix, h_pix = pixmap.width(), pixmap.height()
+
+			scene.setSceneRect(0, 0, w_pix, h_pix)
+			scene.addPixmap(pixmap)
+			#self.map.setSceneRect(0, 0, w_pix, h_pix)
+			self.map.setScene(scene)
+
+			t1=fname[0].encode('ascii','ignore')
+			t1.encode('ascii','replace')
+			truc=t1.split('/')
+
+			nameMap = truc[-1]
+			item = QStandardItem(nameMap)
+			self.modelmaps.appendRow(item)
+
+
 	##########
 
 	#Add a location on the application
@@ -66,7 +94,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 			direc = QDir(QDir.currentPath()) #chemin de Test.py
 			filedir = direc.relativeFilePath(fname[0])	#filedir = chemin relatif du fichier excel
 			locations = Back.read_locations(filedir,'PIACENZIAN_FVM')		
-			#Ajouter aux points déja présents
+			#Ajouter aux points deja presents
 			self.locs = self.locs + locations
 			for loc in locations:
 				item = QStandardItem(loc.name)
