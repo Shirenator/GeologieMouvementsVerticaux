@@ -63,6 +63,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 			#self.map.setSceneRect(0, 0, w_pix, h_pix)
 			self.map.setScene(scene)
 
+			# on recupere le chemin, le passe en str, et l'ajoute dans la liste des maps
 			t1=fname[0].encode('ascii','ignore')
 			t1.encode('ascii','replace')
 			truc=t1.split('/')
