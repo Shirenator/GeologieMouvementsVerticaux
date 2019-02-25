@@ -11,6 +11,7 @@ from geomove import Ui_Geomove
 #Main window
 class MainWindow(QMainWindow, Ui_Geomove):
 
+	
 	#Constructor
 	def __init__(self):
 
@@ -24,6 +25,10 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		self.locCharac = PrintLocationCharacteristics.PrintLocationCharacteristics(self.characteristics)
 		self.locs = []
 		self.connectActions()
+		self.zoom = 1
+		self.scene = QGraphicsScene()
+		self.im1 = QImage()
+		
 
 		
 	#Connect items of the interface and fonctions
@@ -48,29 +53,76 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		fname = QFileDialog.getOpenFileName(self, 'Open file','c:\\',"TIF Files (*.TIF)")
 		if fname[0]:
 
-			scene = QGraphicsScene()
 
 			mapsize = self.map.frameSize()
 			mWid = mapsize.width()
 			mHei = mapsize.height()
 			im0 = QImage(fname[0])
+			self.im1 = QImage(fname[0])			
 
 			pixmap = QPixmap.fromImage(im0.scaled(mWid, mHei, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 			w_pix, h_pix = pixmap.width(), pixmap.height()
 
-			scene.setSceneRect(0, 0, w_pix, h_pix)
-			scene.addPixmap(pixmap)
+			self.scene.setSceneRect(0, 0, w_pix, h_pix)
+			self.scene.addPixmap(pixmap)
 			#self.map.setSceneRect(0, 0, w_pix, h_pix)
-			self.map.setScene(scene)
+			self.map.setScene(self.scene)
 
 			# on recupere le chemin, le passe en str, et l'ajoute dans la liste des maps
-			t1=fname[0].encode('ascii','ignore')
-			t1.encode('ascii','replace')
-			truc=t1.split('/')
+			fulldir=fname[0]
+			#fulldir.type()
+			#fulldir.encode('ascii','ignore')
+			#fulldir.encode('ascii','replace')
+			fulldir.decode()
+			fulldirsplit=fulldir.split('/')
 
-			nameMap = truc[-1]
+			nameMap = fulldirsplit[-1]
 			item = QStandardItem(nameMap)
 			self.modelmaps.appendRow(item)
+
+
+	def zoomIn(self):
+
+		self.scene = QGraphicsScene()
+		mapsize = self.map.frameSize()
+		mWid = mapsize.width()
+		mHei = mapsize.height()
+		im0 = self.im1
+		pixmap = QPixmap.fromImage(im0.scaled(mWid, mHei, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+		w_pix, h_pix = pixmap.width(), pixmap.height()
+
+		self.zoom = self.zoom * 2
+		pixmap = QPixmap.fromImage(im0.scaled(mWid*self.zoom, mHei*self.zoom, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+		self.scene.setSceneRect(0, 0, w_pix*self.zoom, h_pix*self.zoom)
+		self.scene.addPixmap(pixmap)
+		self.map.setScene(self.scene)
+
+        	self.map.repaint()
+        	self.map.show()
+
+	def zoomOut(self):
+
+		self.scene = QGraphicsScene()
+		mapsize = self.map.frameSize()
+		mWid = mapsize.width()
+		mHei = mapsize.height()
+		im0 = self.im1
+		pixmap = QPixmap.fromImage(im0.scaled(mWid, mHei, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+		w_pix, h_pix = pixmap.width(), pixmap.height()
+		
+		if self.zoom > 1:
+			self.zoom = self.zoom * 0.5
+
+			pixmap = QPixmap.fromImage(im0.scaled(mWid*self.zoom, mHei*self.zoom, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+			self.scene.setSceneRect(0, 0, w_pix*self.zoom, h_pix*self.zoom)
+			self.scene.addPixmap(pixmap)
+			self.map.setScene(self.scene)
+
+			self.map.repaint()
+			self.map.show()
+
+
+
 
 
 	##########
