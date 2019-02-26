@@ -40,8 +40,12 @@ class PrintLocationCharacteristics(QWidget):
 		self.modelcarac.appendRow(item8)
 		
 		#Calcul and print movements	
-		item = QStandardItem("\nVerticals Movements :")
+		itemtiret = QStandardItem("\n _________________________")
+		itemtiret2 = QStandardItem("_________________________")
+		item = QStandardItem("  VERTICAL MOVEMENTS :  ")
+		self.modelcarac.appendRow(itemtiret)	
 		self.modelcarac.appendRow(item)	
+		self.modelcarac.appendRow(itemtiret2)
 		
 		if(self.gsls==None):		#if no gsl file imported
 			item9 = QStandardItem("## No GSL file find ##")
@@ -50,7 +54,7 @@ class PrintLocationCharacteristics(QWidget):
 		
 			fvm = loc.vertical_movement(self.gsls) #method, method_name, min, mean, max
 			for i in range(1,len(fvm)):
-				
+			
 				item10 = QStandardItem("\nMethod : "+ fvm[i][0])
 				item11 = QStandardItem("Method name : "+ fvm[i][1])
 				self.modelcarac.appendRow(item10)
@@ -66,13 +70,10 @@ class PrintLocationCharacteristics(QWidget):
 					self.modelcarac.appendRow(item12)
 					self.modelcarac.appendRow(item13)
 					self.modelcarac.appendRow(item14)
+				itemtiret3 = QStandardItem("____________________________")
+				self.modelcarac.appendRow(itemtiret3)
 	
-		
-		
-		
-		
-		
-		
-		
-		
+	
+	
+	
 	

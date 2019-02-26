@@ -68,7 +68,7 @@ class Location:
 					sl_mean_filtered.append(sl_mean[i])
 					sl_max_filtered.append(sl_max[i])
 				i+=1
-				if(time[i]>self.age_max):
+				if(time[i]>self.age_max or ((i+1) == len(time))):
 					bool = False
 			method = gsl.method
 			method_name = gsl.method_name
