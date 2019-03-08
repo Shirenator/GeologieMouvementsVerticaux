@@ -17,6 +17,7 @@ class Map:
 		fulldirsplit=fulldir.split('/')
 		self.name = fulldirsplit[-1]
 		
+		#geotiff file importation
 		mapsize = wmap.frameSize()
 		mWid = mapsize.width()
 		mHei = mapsize.height()
@@ -29,10 +30,18 @@ class Map:
 		self.scene.addPixmap(self.pixmap)
 		self.locList = []			#All locations of the map
 		self.locListFiltered = []		#All locations displayed with the filter
-		#importation fichier geotif
 		
+	#add location to the map
 	def addloc(self, loc):
 		self.locList.append(loc)
-		
+	
+	#add location to the filter
 	def addlocFiltered(self, loc):
 		self.locListFiltered.append(loc)
+		
+	#delete location from the map
+	def deleteLoc(self, indfilter):
+		loc = self.locListFiltered[indfilter]
+		print(loc.name)
+		ind = self.locList.index(loc)
+		del self.locList[ind]

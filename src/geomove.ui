@@ -77,7 +77,7 @@
                <string/>
               </property>
               <property name="suffix">
-               <string> mA</string>
+               <string>Ma</string>
               </property>
               <property name="maximum">
                <double>99.989999999999995</double>
@@ -121,13 +121,16 @@
                </size>
               </property>
               <property name="suffix">
-               <string> mA</string>
+               <string>Ma</string>
+              </property>
+              <property name="maximum">
+               <double>250.000000000000000</double>
               </property>
               <property name="singleStep">
                <double>0.100000000000000</double>
               </property>
               <property name="value">
-               <double>10.000000000000000</double>
+               <double>250.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -217,11 +220,8 @@
      <string>&amp;File</string>
     </property>
     <addaction name="actionNew_Map"/>
-    <addaction name="action_Open_Map"/>
-    <addaction name="actionOpen_recent_Map"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSave_as"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -231,7 +231,12 @@
     </property>
     <addaction name="actionImport_locations"/>
     <addaction name="actionImport_GSL"/>
-    <addaction name="actionChange_scale"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelete_Selected_Location"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportMapPng"/>
+    <addaction name="action_ExportMaptxt"/>
+    <addaction name="actionExportMapExcel"/>
    </widget>
    <widget class="QMenu" name="menu_Settings">
     <property name="title">
@@ -243,7 +248,7 @@
     <property name="title">
      <string>&amp;Help ?</string>
     </property>
-    <addaction name="actionVoir_didacticiel"/>
+    <addaction name="actionTuto"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edition"/>
@@ -256,11 +261,14 @@
    </property>
   </action>
   <action name="action_Open_Map">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>&amp;Open Map</string>
    </property>
   </action>
-  <action name="actionOpen_recent_Map">
+  <action name="action">
    <property name="text">
     <string>Open recent Map</string>
    </property>
@@ -290,7 +298,7 @@
   </action>
   <action name="actionImport_locations">
    <property name="text">
-    <string>Import Location from Excel</string>
+    <string>Import Locations from Excel</string>
    </property>
   </action>
   <action name="actionChange_scale">
@@ -298,7 +306,7 @@
     <string>Change scale</string>
    </property>
   </action>
-  <action name="actionVoir_didacticiel">
+  <action name="actionTuto">
    <property name="text">
     <string>Watch didacticiel</string>
    </property>
@@ -306,6 +314,31 @@
   <action name="actionImport_GSL">
    <property name="text">
     <string>Import Global Sea Level from Excel</string>
+   </property>
+  </action>
+  <action name="actionDelete_Selected_Location">
+   <property name="text">
+    <string>Delete Selected Location</string>
+   </property>
+  </action>
+  <action name="action_Export_Map_as_PNG">
+   <property name="text">
+    <string>&amp;Export Map as PNG</string>
+   </property>
+  </action>
+  <action name="actionExportMapPng">
+   <property name="text">
+    <string>Export Map as png</string>
+   </property>
+  </action>
+  <action name="action_ExportMaptxt">
+   <property name="text">
+    <string>Export Map data as txt</string>
+   </property>
+  </action>
+  <action name="actionExportMapExcel">
+   <property name="text">
+    <string>Export Map data as Excel</string>
    </property>
   </action>
  </widget>

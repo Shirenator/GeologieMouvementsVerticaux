@@ -48,7 +48,7 @@ class PrintLocationCharacteristics(QWidget):
 		self.modelcarac.appendRow(itemtiret2)
 		
 		if(self.gsls==None):		#if no gsl file imported
-			item9 = QStandardItem("## No GSL file find ##")
+			item9 = QStandardItem("## No GSL file found ##")
 			self.modelcarac.appendRow(item9)
 		else:		#if gsl file imported
 		
@@ -64,9 +64,9 @@ class PrintLocationCharacteristics(QWidget):
 					item12 = QStandardItem("## No valid data for this method ##")
 					self.modelcarac.appendRow(item12)
 				else:		#Results : min, mean, max
-					item12 = QStandardItem("Min : "+ str(fvm[i][2]))
-					item13 = QStandardItem("Mean : "+ str(fvm[i][3]))
-					item14 = QStandardItem("Max : "+ str(fvm[i][4]))
+					item12 = QStandardItem("Min : "+ str(round(fvm[i][2],1)))
+					item13 = QStandardItem("Mean : "+ str(round(fvm[i][3],1)))
+					item14 = QStandardItem("Max : "+ str(round(fvm[i][4],1)))
 					self.modelcarac.appendRow(item12)
 					self.modelcarac.appendRow(item13)
 					self.modelcarac.appendRow(item14)
