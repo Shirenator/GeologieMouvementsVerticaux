@@ -111,3 +111,41 @@ def read_locations(file,sheet_name):
             locations.append(loc)
     return locations
 
+def save(fvm):
+    ret = ""
+    loc = fvm[0]
+    ret = loc.name+"::"+str(loc.latitude)+"::"+str(loc.longitude)+"::"+str(loc.age_min)+"::"+str(loc.age_max)+"::"+str(loc.min_bathy)+"::"+str(loc.max_bathy)+"::"+str(loc.altitude)
+    for i in range (1,len(fvm)):
+        mov = fvm[i]
+        ret = ret+"::"+str(mov[0]).replace("\n","\\n")+"::"+str(mov[1]).replace("\n","\\n")+"::"+str(mov[2]).replace("\n","\\n")+"::"+str(mov[3]).replace("\n","\\n")+"::"+str(mov[4]).replace("\n","\\n")
+    f = open("savefile.txt","a")
+    f.write(ret)
+    f.write("\n")
+    f.close()
+
+def readsave():
+    ret = []
+
+    f = open("savefile.txt","r")
+    lines = f.readlines()
+    for l in lines:
+        i = 8
+        bool = True
+        fvm = []
+        s = l.split("::")
+        fvm.append(Location(s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]))
+        while bool:
+            tab = []
+            tab.append(s[i])
+            tab.append(s[i+1])
+            tab.append(s[i+2])
+            tab.append(s[i+3])
+            tab.append(s[i+4])
+            fvm.append(tab)
+            i+=5
+            if i >= len(s):
+                bool = False
+        ret.append(fvm)
+        print(fvm)
+    f.close()
+    return ret
