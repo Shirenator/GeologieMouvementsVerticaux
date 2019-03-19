@@ -104,6 +104,60 @@ class MainWindow(QMainWindow, Ui_Geomove):
 			self.map.setScene(self.mapsList[ind].scene)
 			self.map.repaint()
 			self.map.show()
+			
+			
+			
+	def ajouterPoint(self):
+
+		print "ajoutPoint"
+
+		ind = self.listMaps.currentIndex().row()
+		pix = self.mapsList[ind].im
+		w_pix, h_pix = self.mapsList[ind].pixmap.width(), self.mapsList[ind].pixmap.height()
+
+		mapsize = self.map.frameSize()
+		mWid = mapsize.width()
+		mHei = mapsize.height()
+		x,y,w_scene,h_scene = self.map.geometry().getRect()
+
+		oSceneX = x-1
+		oSceneY = y-25-2
+
+		margeX = (w_scene-w_pix)/2
+		margeY = (h_scene-h_pix)/2
+
+		oMapX = oSceneX - margeX
+		oMapY = oSceneY - margeY
+
+		################################### TEST #################################
+		####### a tester avec de coordonnées ca marche surement pas mais bon #####
+
+		coorXdTopL = 52000
+		coorYdTopL = 52000
+
+		coordXBotR = 92000
+		coordYBotR = 92000
+
+		coordXPoint = 70000
+		coordYPoint = 70000
+		
+		lon = w_pix - (w_pix*((coordXBotR-coordXPoint)/(coordXBotR-coorXdTopL)))
+		lar = h_pix - (h_pix*((coordYBotR-coordYPoint)/(coordYBotR-coorYdTopL)))
+
+		posPointX = oSceneX + lon
+		posPointY = oSceneY + lar
+
+		print(lon)
+		print(lar)
+		
+		# dessiner le rectangle ici,
+		# utiliser lon et lar ou posPointX et posPointY
+		# en fonction de la facon d'utiliser la methode draw
+		# posPoint c'est la valeur absolue et lon/lar c'est relatif au debut de la scene
+		#
+
+		###########################################################################
+
 
 
 	#Add a location on the application
