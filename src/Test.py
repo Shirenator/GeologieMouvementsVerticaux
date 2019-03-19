@@ -132,12 +132,16 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		################################### TEST #################################
 		####### a tester avec de coordonnées ca marche surement pas mais bon #####
 
+		# me faut les coordonnées de l'angle en haut a gauche et en bas a droite
+		
 		coorXdTopL = 52000
 		coorYdTopL = 52000
 
 		coordXBotR = 92000
 		coordYBotR = 92000
 
+		# coordonnées du points en question
+		
 		coordXPoint = 70000
 		coordYPoint = 70000
 		
@@ -151,10 +155,11 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		print(lar)
 		
 		# dessiner le rectangle ici,
-		# utiliser lon et lar ou posPointX et posPointY
-		# en fonction de la facon d'utiliser la methode draw
-		# posPoint c'est la valeur absolue et lon/lar c'est relatif au debut de la scene
-		#
+		# utiliser lon et lar
+		
+		item = QGraphicsRectItem(lar,lon,25,25)
+		item.setBrush(QBrush(Qt.Red))
+		currentmap.scene.addItem(item)
 
 		###########################################################################
 
