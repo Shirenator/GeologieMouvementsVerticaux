@@ -132,34 +132,43 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		################################### TEST #################################
 		####### a tester avec de coordonnees ca marche surement pas mais bon #####
 
-		# me faut les coordonnees de l'angle en haut a gauche et en bas a droite
-		
+		# me faut les coordonnees de l'angle en haut a gauche et en bas a droite		
 		coorXdTopL = 52000
 		coorYdTopL = 52000
+		# coorXdTopL = self.mapsList[ind].topLX
+		# coorYdTopL = self.mapsList[ind].topLY
+		
 
 		coordXBotR = 92000
 		coordYBotR = 92000
+		# coorXdBotR = self.mapsList[ind].BotRX
+		# coorYdBotR = self.mapsList[ind].BotRY
 
-		# coordonnees du points en question
-		
+		# coordonnees du points en question		
 		coordXPoint = 70000
 		coordYPoint = 70000
+		# coordXPoint = trucEnParametreX
+		# coordYPoint = trucEnParametreY
 		
-		lon = w_pix - (w_pix*((coordXBotR-coordXPoint)/(coordXBotR-coorXdTopL)))
-		lar = h_pix - (h_pix*((coordYBotR-coordYPoint)/(coordYBotR-coorYdTopL)))
+		lon = w_pix - (w_pix * (coordXBotR-coordXPoint)/(coordXBotR-coorXdTopL) )
+		lar = h_pix - (h_pix * (coordYBotR-coordYPoint)/(coordYBotR-coorYdTopL) )
 
-		posPointX = oSceneX + lon
-		posPointY = oSceneY + lar
+		#posPointX = oSceneX + lon
+		#posPointY = oSceneY + lar
 
-		print(lon)
-		print(lar)
+		#print(w_pix)
+		#print(h_pix)
+		#print(lon)
+		#print(lar)
 		
 		# dessiner le rectangle ici,
 		# utiliser lon et lar
+
+		sizeSqr = 10
 		
-		item = QGraphicsRectItem(lar,lon,25,25)
-		item.setBrush(QBrush(Qt.Red))
-		currentmap.scene.addItem(item)
+		item = QGraphicsRectItem(lon-(sizeSqr/2),lar-(sizeSqr/2),sizeSqr,sizeSqr)
+		item.setBrush(QBrush(Qt.red))
+		self.mapsList[ind].scene.addItem(item)
 
 		###########################################################################
 
