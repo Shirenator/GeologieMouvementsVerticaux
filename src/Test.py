@@ -130,7 +130,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		oMapY = oSceneY - margeY
 
 		################################### TEST #################################
-		####### a tester avec de coordonnees ca marche surement pas mais bon #####
+		## a tester avec de coordonnees faudrait des coordonnees format decimal ##
 
 		# me faut les coordonnees de l'angle en haut a gauche et en bas a droite		
 		coorXdTopL = 52000
@@ -138,11 +138,11 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		# coorXdTopL = self.mapsList[ind].topLX
 		# coorYdTopL = self.mapsList[ind].topLY
 		
-
 		coordXBotR = 92000
 		coordYBotR = 92000
 		# coorXdBotR = self.mapsList[ind].BotRX
 		# coorYdBotR = self.mapsList[ind].BotRY
+		
 
 		# coordonnees du points en question		
 		coordXPoint = 70000
