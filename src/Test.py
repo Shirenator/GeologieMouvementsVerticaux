@@ -107,7 +107,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 			
 			
 			
-	def ajouterPoint(self):
+	def addPoint(self):
 
 		print "ajoutPoint"
 
@@ -130,7 +130,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		oMapY = oSceneY - margeY
 
 		################################### TEST #################################
-		## a tester avec de coordonnees faudrait des coordonnees format decimal ##
+		####### a tester avec de coordonnees ca marche surement pas mais bon #####
 
 		# me faut les coordonnees de l'angle en haut a gauche et en bas a droite		
 		coorXdTopL = 52000
@@ -138,15 +138,15 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		# coorXdTopL = self.mapsList[ind].topLX
 		# coorYdTopL = self.mapsList[ind].topLY
 		
+
 		coordXBotR = 92000
 		coordYBotR = 92000
 		# coorXdBotR = self.mapsList[ind].BotRX
 		# coorYdBotR = self.mapsList[ind].BotRY
-		
 
 		# coordonnees du points en question		
-		coordXPoint = 70000
-		coordYPoint = 70000
+		coordXPoint = 55000
+		coordYPoint = 55000
 		# coordXPoint = trucEnParametreX
 		# coordYPoint = trucEnParametreY
 		
@@ -164,14 +164,37 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		# dessiner le rectangle ici,
 		# utiliser lon et lar
 
-		sizeSqr = 10
-		
-		item = QGraphicsRectItem(lon-(sizeSqr/2),lar-(sizeSqr/2),sizeSqr,sizeSqr)
+		# Largeur du rectangle central
+		sizeSqrMain = 10
+		# Largeur des rectangles sur les cotes
+		sizeSqrSide = 3
+
+		coinGaucheX = lon-(sizeSqrMain/2)
+		coinGaucheY = lar-(sizeSqrMain/2)		
+
+		# Si la methode utilise a des incertitudes
+		avecInsertitude = 1
+
+		# Ajout du rectangle principal
+		item = QGraphicsRectItem(coinGaucheX,coinGaucheY,sizeSqrMain,sizeSqrMain)
 		item.setBrush(QBrush(Qt.red))
 		self.mapsList[ind].scene.addItem(item)
 
-		###########################################################################
+		# Ajout des rectangle d'insertitudes
+		if avecInsertitude :
 
+			coinGaucheSideL = coinGaucheX - sizeSqrSide -1
+			coinGaucheSideR = coinGaucheX + sizeSqrMain 
+
+			sideL = QGraphicsRectItem(coinGaucheSideL,coinGaucheY,sizeSqrSide,sizeSqrMain)
+			sideL.setBrush(QBrush(Qt.blue))
+			self.mapsList[ind].scene.addItem(sideL)
+
+			sideR = QGraphicsRectItem(coinGaucheSideR,coinGaucheY,sizeSqrSide,sizeSqrMain)
+			sideR.setBrush(QBrush(Qt.blue))
+			self.mapsList[ind].scene.addItem(sideR)
+
+	#### Fin addAllPoint ###################################################################
 
 
 	#Add a location on the application
