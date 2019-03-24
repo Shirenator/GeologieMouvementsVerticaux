@@ -107,7 +107,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 			
 			
 			
-	def addPoint(self):
+	def addPoint(self,loc,ins):
 
 		print "ajoutPoint"
 
@@ -130,39 +130,41 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		oMapY = oSceneY - margeY
 
 		################################### TEST #################################
-		####### a tester avec de coordonnees ca marche surement pas mais bon #####
 
 		# me faut les coordonnees de l'angle en haut a gauche et en bas a droite		
-		coorXdTopL = 52000
-		coorYdTopL = 52000
+		#coorXdTopL = 52000
+		#coorYdTopL = 52000
+		coordXTopL = -6
+		coordYTopL = 45
 		# coorXdTopL = self.mapsList[ind].topLX
 		# coorYdTopL = self.mapsList[ind].topLY
 		
 
-		coordXBotR = 92000
-		coordYBotR = 92000
+		#coordXBotR = 92000
+		#coordYBotR = 92000
+		coordXBotR = 1
+		coordYBotR = 50
 		# coorXdBotR = self.mapsList[ind].BotRX
 		# coorYdBotR = self.mapsList[ind].BotRY
 
 		# coordonnees du points en question		
-		coordXPoint = 55000
-		coordYPoint = 55000
-		# coordXPoint = trucEnParametreX
-		# coordYPoint = trucEnParametreY
-		
-		lon = w_pix - (w_pix * (coordXBotR-coordXPoint)/(coordXBotR-coorXdTopL) )
-		lar = h_pix - (h_pix * (coordYBotR-coordYPoint)/(coordYBotR-coorYdTopL) )
+		#coordXPoint = 55000
+		#coordYPoint = 55000
+		coordXPoint = int(loc.longitude)
+		coordYPoint = int(loc.latitude)
 
-		#posPointX = oSceneX + lon
-		#posPointY = oSceneY + lar
+		lon = w_pix - (w_pix * (coordXBotR-coordXPoint)/(coordXBotR-coordXTopL) )
+		lar = h_pix - (h_pix * (coordYBotR-coordYPoint)/(coordYBotR-coordYTopL) )
 
-		#print(w_pix)
-		#print(h_pix)
-		#print(lon)
-		#print(lar)
+
+		####### recup du mouv vertical
+		mouvV = ((loc.vertical_movement(self.locCharac.gsls))[1])[3]
+		#print(mouvV)
+
 		
-		# dessiner le rectangle ici,
-		# utiliser lon et lar
+		###################################		
+		### dessiner le rectangle ici #####
+		###################################
 
 		# Largeur du rectangle central
 		sizeSqrMain = 10
@@ -173,7 +175,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		coinGaucheY = lar-(sizeSqrMain/2)		
 
 		# Si la methode utilise a des incertitudes
-		avecInsertitude = 1
+		avecInsertitude = ins
 
 		# Ajout du rectangle principal
 		item = QGraphicsRectItem(coinGaucheX,coinGaucheY,sizeSqrMain,sizeSqrMain)
@@ -196,6 +198,17 @@ class MainWindow(QMainWindow, Ui_Geomove):
 
 	#### Fin addAllPoint ###################################################################
 
+
+
+
+	def addAllPoint(self):
+		
+		ind = self.listMaps.currentIndex().row()
+
+		for loc in self.mapsList[ind].locList:
+			self.addPoint(loc,0)
+			
+			
 
 	#Add a location on the application
 	def action_addLocation(self):
