@@ -13,7 +13,7 @@ class CreateLocationWindow(QDialog):
 
 		self.mainw = mainw
 		self.setWindowTitle("Add Location")
-		self.resize(500,400);
+		self.resize(500,400)
 		self.formGroupBox = QGroupBox("Location characteristics")
 
 		self.name = QLineEdit()

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'geomove.ui'
 #
-# Created: Thu Mar  7 15:35:39 2019
+# Created: Mon Mar 25 13:08:31 2019
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -158,9 +158,16 @@ class Ui_Geomove(object):
         self.action_ExportMaptxt.setObjectName("action_ExportMaptxt")
         self.actionExportMapExcel = QtGui.QAction(Geomove)
         self.actionExportMapExcel.setObjectName("actionExportMapExcel")
+        self.actionMVMScale = QtGui.QAction(Geomove)
+        self.actionMVMScale.setObjectName("actionMVMScale")
+        self.actionDisplay_scale = QtGui.QAction(Geomove)
+        self.actionDisplay_scale.setObjectName("actionDisplay_scale")
+        self.actionExport_scale = QtGui.QAction(Geomove)
+        self.actionExport_scale.setObjectName("actionExport_scale")
+        self.actionAdd_coordinates = QtGui.QAction(Geomove)
+        self.actionAdd_coordinates.setObjectName("actionAdd_coordinates")
         self.menu_File.addAction(self.actionNew_Map)
-        self.menu_File.addSeparator()
-        self.menu_File.addAction(self.actionSave)
+        self.menu_File.addAction(self.actionAdd_coordinates)
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionQuit)
         self.menu_Edition.addAction(self.actionImport_locations)
@@ -171,7 +178,9 @@ class Ui_Geomove(object):
         self.menu_Edition.addAction(self.actionExportMapPng)
         self.menu_Edition.addAction(self.action_ExportMaptxt)
         self.menu_Edition.addAction(self.actionExportMapExcel)
-        self.menu_Settings.addAction(self.actionChange_language)
+        self.menu_Settings.addAction(self.actionMVMScale)
+        self.menu_Settings.addAction(self.actionDisplay_scale)
+        self.menu_Settings.addAction(self.actionExport_scale)
         self.menu_Help.addAction(self.actionTuto)
         self.menuBar.addAction(self.menu_File.menuAction())
         self.menuBar.addAction(self.menu_Edition.menuAction())
@@ -195,7 +204,7 @@ class Ui_Geomove(object):
         self.menu_Edition.setTitle(QtGui.QApplication.translate("Geomove", "&Edition", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_Settings.setTitle(QtGui.QApplication.translate("Geomove", "&Settings", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_Help.setTitle(QtGui.QApplication.translate("Geomove", "&Help ?", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionNew_Map.setText(QtGui.QApplication.translate("Geomove", "&New Map", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionNew_Map.setText(QtGui.QApplication.translate("Geomove", "New Map", None, QtGui.QApplication.UnicodeUTF8))
         self.action_Open_Map.setText(QtGui.QApplication.translate("Geomove", "&Open Map", None, QtGui.QApplication.UnicodeUTF8))
         self.action.setText(QtGui.QApplication.translate("Geomove", "Open recent Map", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSave.setText(QtGui.QApplication.translate("Geomove", "Save", None, QtGui.QApplication.UnicodeUTF8))
@@ -211,4 +220,8 @@ class Ui_Geomove(object):
         self.actionExportMapPng.setText(QtGui.QApplication.translate("Geomove", "Export Map as png", None, QtGui.QApplication.UnicodeUTF8))
         self.action_ExportMaptxt.setText(QtGui.QApplication.translate("Geomove", "Export Map data as txt", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExportMapExcel.setText(QtGui.QApplication.translate("Geomove", "Export Map data as Excel", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionMVMScale.setText(QtGui.QApplication.translate("Geomove", "Set scale", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionDisplay_scale.setText(QtGui.QApplication.translate("Geomove", "Display scale", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionExport_scale.setText(QtGui.QApplication.translate("Geomove", "Export scale as png", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAdd_coordinates.setText(QtGui.QApplication.translate("Geomove", "Add geo. coordinates to this map", None, QtGui.QApplication.UnicodeUTF8))
 

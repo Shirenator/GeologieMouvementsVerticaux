@@ -1,7 +1,12 @@
 import sys
 import Back
+import pickle
 import Map
 import Sheetchoice
+import Coordinates
+import ColorScale
+import DisplayScale
+import LocationRectangle
 import re
 import os
 import PrintLocationCharacteristics
@@ -9,6 +14,7 @@ import CreateLocationWindow
 from PySide.QtGui import *
 from PySide.QtCore import *
 from geomove import Ui_Geomove
+from random import *
 
 #Main window
 class MainWindow(QMainWindow, Ui_Geomove):
@@ -25,6 +31,8 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		self.locwindow = CreateLocationWindow.CreateLocationWindow(self)
 		self.locCharac = PrintLocationCharacteristics.PrintLocationCharacteristics(self.characteristics)
 		self.mapsList = []
+		self.readsave()
+		self.colorScale = ColorScale.ColorScale(self)
 		self.connectActions()
 		
 		
@@ -33,7 +41,6 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		#Menu
 		self.actionQuit.triggered.connect(qApp.quit)
 		self.actionNew_Map.triggered.connect(self.action_addMap)
-		self.actionSave.triggered.connect(self.action_save)
 		self.actionImport_locations.triggered.connect(self.action_addLocationExcel)
 		self.actionImport_GSL.triggered.connect(self.action_GSL)
 		self.actionDelete_Selected_Location.triggered.connect(self.action_deleteLocation)
@@ -41,13 +48,16 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		self.actionExportMapPng.triggered.connect(self.action_ExportPng)
 		self.action_ExportMaptxt.triggered.connect(self.action_ExportTxt)
 		self.actionExportMapExcel.triggered.connect(self.action_ExportExcel)
+		self.actionMVMScale.triggered.connect(self.action_scale)
+		self.actionDisplay_scale.triggered.connect(self.action_displayScale)
+		self.actionExport_scale.triggered.connect(self.action_ExportScale)
+		self.actionAdd_coordinates.triggered.connect(self.action_AddCoordinates)
 		#Buttons
 		self.addMap.clicked.connect(self.action_addMap)
 		self.addLocation.clicked.connect(self.action_addLocation)
 		self.ConfirmationFilter.clicked.connect(self.action_confirmFilter)
 		self.Zoomin.clicked.connect(self.zoomIn)
 		self.Zoomout.clicked.connect(self.zoomOut)
-
 		#Lists
 		self.listLocations.clicked.connect(self.onlocationSelected)
 		self.listMaps.clicked.connect(self.action_confirmFilter)
@@ -83,6 +93,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		self.map.setScene(self.mapsList[ind].scene)
 		self.map.repaint()
 		self.map.show()
+		self.action_confirmFilter()
         	
 	#Unzoom the map
 	def zoomOut(self):
@@ -104,111 +115,21 @@ class MainWindow(QMainWindow, Ui_Geomove):
 			self.map.setScene(self.mapsList[ind].scene)
 			self.map.repaint()
 			self.map.show()
-			
-			
-			
-	def addPoint(self,loc,ins):
+			self.action_confirmFilter()
 
-		print "ajoutPoint"
-
+	#reset the scene for update
+	def resetscene(self):
 		ind = self.listMaps.currentIndex().row()
-		pix = self.mapsList[ind].im
-		w_pix, h_pix = self.mapsList[ind].pixmap.width(), self.mapsList[ind].pixmap.height()
-
+		scene = QGraphicsScene()
 		mapsize = self.map.frameSize()
 		mWid = mapsize.width()
 		mHei = mapsize.height()
-		x,y,w_scene,h_scene = self.map.geometry().getRect()
-
-		oSceneX = x-1
-		oSceneY = y-25-2
-
-		margeX = (w_scene-w_pix)/2
-		margeY = (h_scene-h_pix)/2
-
-		oMapX = oSceneX - margeX
-		oMapY = oSceneY - margeY
-
-		################################### TEST #################################
-
-		# me faut les coordonnees de l'angle en haut a gauche et en bas a droite		
-		#coorXdTopL = 52000
-		#coorYdTopL = 52000
-		coordXTopL = -6
-		coordYTopL = 45
-		# coorXdTopL = self.mapsList[ind].topLX
-		# coorYdTopL = self.mapsList[ind].topLY
-		
-
-		#coordXBotR = 92000
-		#coordYBotR = 92000
-		coordXBotR = 1
-		coordYBotR = 50
-		# coorXdBotR = self.mapsList[ind].BotRX
-		# coorYdBotR = self.mapsList[ind].BotRY
-
-		# coordonnees du points en question		
-		#coordXPoint = 55000
-		#coordYPoint = 55000
-		coordXPoint = int(loc.longitude)
-		coordYPoint = int(loc.latitude)
-
-		lon = w_pix - (w_pix * (coordXBotR-coordXPoint)/(coordXBotR-coordXTopL) )
-		lar = h_pix - (h_pix * (coordYBotR-coordYPoint)/(coordYBotR-coordYTopL) )
+		pixmap = QPixmap.fromImage(self.mapsList[ind].im.scaled(mWid*self.mapsList[ind].zoom, mHei*self.mapsList[ind].zoom, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+		scene.addPixmap(pixmap)
+		self.mapsList[ind].scene = scene
+		self.map.setScene(self.mapsList[ind].scene)
 
 
-		####### recup du mouv vertical
-		mouvV = ((loc.vertical_movement(self.locCharac.gsls))[1])[3]
-		#print(mouvV)
-
-		
-		###################################		
-		### dessiner le rectangle ici #####
-		###################################
-
-		# Largeur du rectangle central
-		sizeSqrMain = 10
-		# Largeur des rectangles sur les cotes
-		sizeSqrSide = 3
-
-		coinGaucheX = lon-(sizeSqrMain/2)
-		coinGaucheY = lar-(sizeSqrMain/2)		
-
-		# Si la methode utilise a des incertitudes
-		avecInsertitude = ins
-
-		# Ajout du rectangle principal
-		item = QGraphicsRectItem(coinGaucheX,coinGaucheY,sizeSqrMain,sizeSqrMain)
-		item.setBrush(QBrush(Qt.red))
-		self.mapsList[ind].scene.addItem(item)
-
-		# Ajout des rectangle d'insertitudes
-		if avecInsertitude :
-
-			coinGaucheSideL = coinGaucheX - sizeSqrSide -1
-			coinGaucheSideR = coinGaucheX + sizeSqrMain 
-
-			sideL = QGraphicsRectItem(coinGaucheSideL,coinGaucheY,sizeSqrSide,sizeSqrMain)
-			sideL.setBrush(QBrush(Qt.blue))
-			self.mapsList[ind].scene.addItem(sideL)
-
-			sideR = QGraphicsRectItem(coinGaucheSideR,coinGaucheY,sizeSqrSide,sizeSqrMain)
-			sideR.setBrush(QBrush(Qt.blue))
-			self.mapsList[ind].scene.addItem(sideR)
-
-	#### Fin addAllPoint ###################################################################
-
-
-
-
-	def addAllPoint(self):
-		
-		ind = self.listMaps.currentIndex().row()
-
-		for loc in self.mapsList[ind].locList:
-			self.addPoint(loc,0)
-			
-			
 
 	#Add a location on the application
 	def action_addLocation(self):
@@ -228,7 +149,10 @@ class MainWindow(QMainWindow, Ui_Geomove):
 						self.mapsList[index].addlocFiltered(loc)
 						item = QStandardItem(loc.name)
 						self.modelloc.appendRow(item)
-				except:
+						if(self.locCharac.gsls!=None and self.mapsList[index].coord()):
+							self.printRect(self.mapsList[index], loc)
+				except Exception as e:
+					print(e)
 					self.ErrorCreationLocation()
 			
 		
@@ -254,7 +178,11 @@ class MainWindow(QMainWindow, Ui_Geomove):
 								self.mapsList[index].addlocFiltered(loc)
 								item = QStandardItem(loc.name)
 								self.modelloc.appendRow(item)
-				except:
+								#print on the map
+								if(self.locCharac.gsls!=None and self.mapsList[index].coord()):
+									self.printRect(self.mapsList[index], loc)
+				except Exception as e:
+					print(e)
 					self.ErrorImportation()
 
 
@@ -287,6 +215,12 @@ class MainWindow(QMainWindow, Ui_Geomove):
 				direc = QDir(QDir.currentPath()) #path of Test.py
 				filedir = direc.relativeFilePath(fname[0])	#filedir = relative path of Excel file
 				gsls = Back.read_gsl(filedir,0)
+				#Add  methods names to Colorscale
+				for gsl in gsls:
+					name = "- " + gsl.method + " - " + gsl.method_name
+					self.colorScale.addmethod(name)
+				self.colorScale.indexmethod = 0
+				#Update characteristics of the location
 				self.locCharac.updategsl(gsls)
 				self.GSLFileMessage()
 			except:
@@ -308,7 +242,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		msg = QMessageBox()
 		msg.setIcon(QMessageBox.Information)
 		msg.setText("     GSL File imported !         ")
-		msg.setInformativeText("Vertical motion results are now available for each point in the period corresponding to the imported file")
+		msg.setInformativeText("Vertical movement results are now available for each point in the period corresponding to the imported file")
 		msg.setWindowTitle("Importation successfull")
 		msg.setStandardButtons(QMessageBox.Ok)
 		msg.exec_()
@@ -324,6 +258,7 @@ class MainWindow(QMainWindow, Ui_Geomove):
 	#Confirmation of the filter or selection of a map
 	def action_confirmFilter(self):
 		self.modelloc.clear()
+		self.resetscene()
 		ind = self.listMaps.currentIndex().row()
 		del self.mapsList[ind].locListFiltered [:]
 		locations = self.mapsList[ind].locList
@@ -332,8 +267,11 @@ class MainWindow(QMainWindow, Ui_Geomove):
 				self.mapsList[ind].addlocFiltered(loc)
 				item = QStandardItem(loc.name)
 				self.modelloc.appendRow(item)
+				if(self.locCharac.gsls!=None and self.mapsList[ind].coord()):
+					self.printRect(self.mapsList[ind], loc)
 		#Map View
 		self.map.setScene(self.mapsList[ind].scene)
+		
 
 	#Delete the selected location
 	def action_deleteLocation(self):
@@ -361,10 +299,6 @@ class MainWindow(QMainWindow, Ui_Geomove):
 			return sheetname
 		else:
 			return("cancel")
-	
-	#Save of data
-	def action_save(self):
-		print("save")
 
 	#Print the tutorial
 	def action_tuto(self):
@@ -379,10 +313,54 @@ class MainWindow(QMainWindow, Ui_Geomove):
 		qd.exec_()
 		
 		
-		
-	#Export the map in png format
+	#Export the map with locations in png format
 	def action_ExportPng(self):
-		print("PNG")
+		
+		msg = QMessageBox()
+		msg.setStandardButtons(QMessageBox.Ok)
+		try:
+			ind = self.listMaps.currentIndex().row()
+			scene = self.mapsList[ind].scene
+			img = QImage(scene.width(),scene.height(),QImage.Format_ARGB32_Premultiplied);
+			p = QPainter(img);
+			scene.render(p);
+			p.end();
+			img.save("MapSave.png");
+			#info message
+			msg.setIcon(QMessageBox.Information)
+			msg.setText("     Map exported !         ")
+			msg.setWindowTitle("Exportation successfull")
+			msg.setInformativeText("It has been saved in the FileExample Folder")
+		except:
+			#warning message
+			msg.setIcon(QMessageBox.Warning)
+			msg.setText("     No map to save !         ")
+			msg.setWindowTitle("Export error")
+			msg.setInformativeText("Please, select or create a map to export it")
+		finally:
+			msg.exec_()
+		
+		
+	#Export the scale as png file
+	def action_ExportScale(self):
+		
+		ds = DisplayScale.DisplayScale(self)
+		scene = ds.scene
+		scene.setBackgroundBrush(QBrush(Qt.white))
+		img = QImage(scene.width(),scene.height(),QImage.Format_ARGB32_Premultiplied);
+		p = QPainter(img);
+		scene.render(p);
+		p.end();
+		img.save("ScaleSave.png");
+		#info message
+		msg = QMessageBox()
+		msg.setStandardButtons(QMessageBox.Ok)
+		msg.setIcon(QMessageBox.Information)
+		msg.setText("     Scale exported !         ")
+		msg.setWindowTitle("Exportation successfull")
+		msg.setInformativeText("It has been saved in the FileExample Folder")
+		msg.exec_()
+		
 		
 	#Export the data of the selected map in a txt file
 	def action_ExportTxt(self):
@@ -391,6 +369,170 @@ class MainWindow(QMainWindow, Ui_Geomove):
 	#Export the data of the selected map in a Excel file
 	def action_ExportExcel(self):
 		print("Excel")
+
+
+
+	#Window where the user can modify the color scale
+	def action_scale(self):
+		cs = self.colorScale.exec_()
+		if (cs == QDialog.Accepted):
+			self.colorScale.majSB()
+			if(len(self.mapsList)>0):
+				self.action_confirmFilter()
+		else:
+			self.colorScale.resetSB()
+
+
+	def action_displayScale(self):
+		ds = DisplayScale.DisplayScale(self)
+		scale = ds.exec_()
+
+
+	#Convert longitude / latitude in coordonate on the scene
+	def getcoordonate(self, longi, lat, taille):
+		
+		ind = self.listMaps.currentIndex().row()
+		self.mapsList[ind].scene.height()
+		self.mapsList[ind].scene.width()
+		
+		coordXTopL = float(self.mapsList[ind].tlclon)
+		coordYTopL = float(self.mapsList[ind].tlclat)
+		coordXBotR = float(self.mapsList[ind].brclon)
+		coordYBotR = float(self.mapsList[ind].brclat)
+
+		x= abs(coordXTopL-longi)*(1.0*self.mapsList[ind].scene.width()/abs(coordXTopL-coordXBotR))
+		y= abs(coordYTopL-lat)*(1.0*self.mapsList[ind].scene.height()/abs(coordYTopL-coordYBotR))
+		x -= (taille/2)+(taille/4)
+		y -= taille/4
+		return [x,y]
+
+
+	#Display location in parameter on the map according to its vertical movement
+	def printRect(self, currentmap, loc):
+		
+		smin = self.colorScale.minScale
+		smax = self.colorScale.maxScale
+		taille = 40
+		indexmethod = self.colorScale.indexmethod  + 1
+		
+		#get vertical movement values
+		fvm = loc.vertical_movement(self.locCharac.gsls) #method, method_name, min, mean, max
+		
+		if(fvm[indexmethod][2]==None):	#No result
+			mini = 99999
+			mean = 99999
+			maxi = 99999
+		else:		#Results : min, mean, max
+			mini = round(fvm[indexmethod][2],1)
+			mean = round(fvm[indexmethod][3],1)
+			maxi = round(fvm[indexmethod][4],1)
+		
+		#position in the scene of rectangles
+		coord = self.getcoordonate(loc.longitude, loc.latitude, taille)
+		x = coord[0]
+		y = coord[1]
+		
+		itemmin = LocationRectangle.LocationRectangle(x,y,taille/2,taille/2, loc, self)
+		item = LocationRectangle.LocationRectangle(x+taille/2,y,taille/2,taille/2, loc, self)
+		itemmax = LocationRectangle.LocationRectangle(x+taille,y,taille/2,taille/2, loc, self)	
+		
+		cmin = self.color(smin,smax, mini)
+		c = self.color(smin,smax, mean)
+		cmax = self.color(smin,smax, maxi)
+		itemmin.setBrush(cmin)
+		item.setBrush(c)
+		itemmax.setBrush(cmax)
+		currentmap.scene.addItem(itemmin)
+		currentmap.scene.addItem(item)
+		currentmap.scene.addItem(itemmax)
+		
+
+	#Return the color according to the vertical movement
+	def color(self, scalemin, scalemax, value):
+		
+		scale = (scalemax-scalemin)*1.0
+		if(value<scalemin+scale/10):
+			return QColor(128,0,128,255)
+		elif(value<scalemin+(scale/10)*2):
+			return QBrush(Qt.darkBlue)
+		elif(value<scalemin+(scale/10)*3):
+			return QBrush(Qt.blue)
+		elif(value<scalemin+(scale/10)*4):
+			return QBrush(Qt.cyan)
+		elif(value<scalemin+(scale/10)*5):
+			return QBrush(Qt.green)
+		elif(value<scalemin+(scale/10)*6):
+			return QBrush(Qt.yellow)
+		elif(value<scalemin+(scale/10)*7):
+			return QColor(255,165,0,255)
+		elif(value<scalemin+(scale/10)*8):
+			return QBrush(Qt.red)
+		elif(value<scalemin+(scale/10)*9):
+			return QBrush(Qt.darkRed)
+		elif(value==99999):
+			return QBrush(Qt.darkGray)
+		else:
+			return QColor(88,41,0,255)
+		
+
+	#Save the data for the next launch of the software
+	def save(self):
+		#gsl
+		savegsl = open("savegsl.txt",'wb')
+		pickle.dump(self.locCharac.gsls,savegsl)
+		savegsl.close()
+		#maps
+		savemaps = open("savemaps.txt",'wb')
+		tabmapsave = []
+		for m in self.mapsList:
+			tabmapsave.append([m.fname,m.locList,m.tlclon,m.tlclat,m.brclon,m.brclat])
+		pickle.dump(tabmapsave,savemaps)
+		savemaps.close()
+		
+		
+	
+	#Update the data with backup files
+	def readsave(self):
+		#gsl
+		try:
+			savegsl = open("savegsl.txt",'r')
+			gsls = pickle.load(savegsl)
+			savegsl.close()
+			self.locCharac.gsls = gsls
+		except:
+			print("")
+		
+		#maps
+		try:
+			savemaps = open("savemaps.txt",'r')
+			maps = pickle.load(savemaps)
+			savemaps.close()
+			for m in maps:
+			
+				ma = Map.Map(m[0], self.map)
+				ma.locList += m[1]
+				ma.tlclon = m[2]
+				ma.tlclat = m[3]
+				ma.brclon = m[4]
+				ma.brclat = m[5]
+				#Add to map list
+				self.mapsList.append(ma)
+				item = QStandardItem(ma.name)
+				self.modelmaps.appendRow(item)
+		except:
+			print("")
+
+
+	#Add longitude/latitude coordinate to the current map
+	def action_AddCoordinates(self):
+		coord = Coordinates.Coordinates(self)
+		check = coord.exec_()
+		if(check==QDialog.Accepted):
+			ind = self.listMaps.currentIndex().row()
+			self.mapsList[ind].tlclon = coord.tlclon.text()
+			self.mapsList[ind].tlclat = coord.tlclat.text()
+			self.mapsList[ind].brclon = coord.brclon.text()
+			self.mapsList[ind].brclat = coord.brclat.text()
 
 
 	#Show the interface
@@ -405,5 +547,6 @@ if __name__ == '__main__':
 	mainWin = MainWindow()
 	mainWin.main()
 	ret = app.exec_()
+	mainWin.save()
 	sys.exit( ret )
 
