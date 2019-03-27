@@ -135,9 +135,7 @@ def export(filename,sheetname,fvms):
         ws.cell(row=i,column=13).value = fvm[0].altitude
         for j in range (1,len(fvm)):
             ws.cell(row=1,column=col-3).value = fvm[j][0]
-            print(fvm[j][0])
             ws.cell(row=2,column=col-3).value = fvm[j][1]
-            print(fvm[j][1])
             if(fvm[j][2] is not None):
                 ws.cell(row=i,column=col).value = fvm[j][2]
                 ws.cell(row=i,column=col+1).value = fvm[j][3]
