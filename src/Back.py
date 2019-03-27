@@ -1,5 +1,5 @@
 import pandas as pd
-import openpyxl
+
 
 class GSL:
     def __init__(self, matrix, j):
@@ -115,31 +115,3 @@ def read_locations(file,sheet_name):
             locations.append(loc)
     return locations
 
-
-def export(filename,sheetname,fvms):
-    i = 5
-
-    wb = load_workbook(filename)
-    ws = wb[sheetname]
-    for fvm in fvms:
-        col = 18
-        while(ws.cell(row=i, column=3).value is not None):
-            i+=1
-        ws.cell(row=i,column=3).value = fvm[0].name
-        ws.cell(row=i,column=4).value = fvm[0].latitude
-        ws.cell(row=i,column=5).value = fvm[0].longitude
-        ws.cell(row=i,column=8).value = fvm[0].age_min
-        ws.cell(row=i,column=9).value = fvm[0].age_max
-        ws.cell(row=i,column=11).value = fvm[0].min_bathy
-        ws.cell(row=i,column=12).value = fvm[0].max_bathy
-        ws.cell(row=i,column=13).value = fvm[0].altitude
-        for j in range (1,len(fvm)):
-            ws.cell(row=1,column=col-3).value = fvm[j][0]
-            ws.cell(row=2,column=col-3).value = fvm[j][1]
-            if(fvm[j][2] is not None):
-                ws.cell(row=i,column=col).value = fvm[j][2]
-                ws.cell(row=i,column=col+1).value = fvm[j][3]
-                ws.cell(row=i,column=col+2).value = fvm[j][4]
-            col+=7
-    wb.save(filename)
-    wb.close()
