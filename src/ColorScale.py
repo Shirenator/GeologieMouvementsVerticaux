@@ -83,5 +83,3 @@ class ColorScale(QDialog):
 		self.maxScale=self.maxsb.value()
 		if(self.indexmethod!=-1):
 			self.indexmethod = max(0,self.methodList.currentIndex().row())
-		
-		

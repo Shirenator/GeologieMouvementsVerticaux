@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'geomove.ui'
 #
-# Created: Mon Mar 25 13:08:31 2019
+# Created: Thu Mar 28 23:44:30 2019
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -177,7 +177,6 @@ class Ui_Geomove(object):
         self.menu_Edition.addSeparator()
         self.menu_Edition.addAction(self.actionExportMapPng)
         self.menu_Edition.addAction(self.action_ExportMaptxt)
-        self.menu_Edition.addAction(self.actionExportMapExcel)
         self.menu_Settings.addAction(self.actionMVMScale)
         self.menu_Settings.addAction(self.actionDisplay_scale)
         self.menu_Settings.addAction(self.actionExport_scale)
